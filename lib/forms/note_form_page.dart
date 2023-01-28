@@ -15,6 +15,8 @@ class NoteForm extends StatefulWidget {
 }
 
 class _NoteFormState extends State<NoteForm> {
+  var userData;
+
   bool isEdit = false;
 
   TextEditingController titleController = TextEditingController();
@@ -31,6 +33,14 @@ class _NoteFormState extends State<NoteForm> {
       titleController.text = title;
       descController.text = desc;
     }
+  }
+  void _getInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString("user");
+    var user = convert.jsonDecode(userJson.toString());
+    setState(() {
+      userData = user;
+    });
   }
 
   @override
@@ -100,7 +110,9 @@ class _NoteFormState extends State<NoteForm> {
   }
 
   void addNote() async {
+    _getInfo();
     var data = {
+      'userID': userData['id'],
       'title': titleController.text,
       'description': descController.text
     };

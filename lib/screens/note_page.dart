@@ -18,16 +18,32 @@ class _NotePageState extends State<NotePage> {
 
   @override
   void initState() {
-    _getNotes();
+    _getID();
     _getData();
     super.initState();
   }
 
-  void _getNotes() async {
+  // void _getNotes() async {
+  //   SharedPreferences localStorage = await SharedPreferences.getInstance();
+  //   var token = localStorage.getString('token');
+  //   var url = 'http://10.0.2.2:8000/api/todo';
+  //   var response = await http.get(Uri.parse(url), headers: {
+  //     "Authorization": "Bearer $token",
+  //     "Accept": "application/json"
+  //   });
+  //   setState(() {
+  //     usersInfo = convert.jsonDecode(response.body) as List<dynamic>;
+  //   });
+  // }
+  void _getID() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var token = localStorage.getString('token');
-    var url = 'http://10.0.2.2:8000/api/todo';
-    var response = await http.get(Uri.parse(url), headers: {
+    var userJson = localStorage.getString("user");
+    var user = convert.jsonDecode(userJson.toString());
+    var url = 'http://10.0.2.2:8000/api/user/todos/${user['id']}';
+
+    var response = await http.get(Uri.parse(url),
+    headers: {
       "Authorization": "Bearer $token",
       "Accept": "application/json"
     });
@@ -35,7 +51,6 @@ class _NotePageState extends State<NotePage> {
       usersInfo = convert.jsonDecode(response.body) as List<dynamic>;
     });
   }
-
   void _getData() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var userJson = localStorage.getString("user");
@@ -105,13 +120,15 @@ class _NotePageState extends State<NotePage> {
                           MaterialPageRoute(
                               builder: (context) => NoteForm(todolist: notes)));
                       setState(() {
-                        _getNotes();
+                        //_getNotes();
+                        _getID();
                       });
                     } else if (value == 'delete') {
                       CallApi().deleteNote(
                           'delete/', usersInfo[index]['id'].toString());
                       setState(() {
-                        _getNotes();
+                        //_getNotes();
+                        _getID();
                       });
                     }
                   }, itemBuilder: (context) {
@@ -132,7 +149,7 @@ class _NotePageState extends State<NotePage> {
                 MaterialPageRoute(
                     builder: (context) => NoteForm(todolist: null)));
             setState(() {
-              _getNotes();
+              _getID();
             });
           },
           backgroundColor: const Color(0xFF0097A7),

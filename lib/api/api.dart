@@ -7,8 +7,10 @@ class CallApi {
 
   postData(data, apiUrl) async {
     final String fullUrl = _url + apiUrl + await _getToken();
-    return await http.post(Uri.parse(fullUrl),
-        body: convert.jsonEncode(data), headers: _setHeaders());
+    return await http.post(
+        Uri.parse(fullUrl),
+        body: convert.jsonEncode(data),
+        headers: _setHeaders());
   }
 
   getData(apiUrl) async {
@@ -26,7 +28,7 @@ class CallApi {
     return await http.post(
       Uri.parse(fullUrl),
       headers: {
-        'Authorization': 'Bearer'
+        'Authorization': 'Bearer '
             '$token}',
         'Accept': 'application/json'
       },

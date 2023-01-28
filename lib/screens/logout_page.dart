@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'package:final_project/screens/home_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:final_project/api/api.dart';
 import 'package:flutter/material.dart';
@@ -62,10 +63,21 @@ class _LogoutPageState extends State<LogoutPage> {
     var response = await http.post(
         Uri.parse(url),
         headers: {
-          "Authorization":"Bearer$token",
+          "Authorization":"Bearer $token",
           "Accept":"application/json"
         },
     );
-    print(response.body);
+     Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
+     _showMsg('Logout Sucessfully');
+
+  }
+  _showMsg(msg) {
+    final snackBar = SnackBar(
+        content: Text(msg),
+        action: SnackBarAction(
+          label: 'Close',
+          onPressed: () {},
+        ));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
